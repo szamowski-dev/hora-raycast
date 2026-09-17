@@ -2,7 +2,7 @@
 
 ## [Initial Version] - {PR_MERGE_DATE}
 
-- Quick Add Event — create an event from a sentence without opening hora
-- Add Event — parse a sentence and open it in hora's editor to adjust
-- Add Task — add to any Google Tasks list, with a due date and notes
-- Join Meeting — find an upcoming meeting and open its link in the right account
+- Create Calendar Event — describe an event and save it without opening hora
+- Create Meeting — parse a sentence, then refine it in hora before saving
+- Create Task — add to any Google Tasks list, with a due date and notes
+- Join Next Meeting — find an upcoming meeting and open its link in the right account

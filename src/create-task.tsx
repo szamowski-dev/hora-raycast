@@ -2,7 +2,8 @@ import { Action, ActionPanel, Form, Toast, closeMainWindow, showToast, useNaviga
 import { useCachedPromise } from "@raycast/utils";
 import { useState } from "react";
 import { showFailure } from "./feedback";
-import { addTask, listTaskLists } from "./hora";
+import { HoraNotInstalledError, HoraOutdatedError, addTask, listTaskLists } from "./hora";
+import { HoraRequired } from "./hora-required";
 
 /**
  * A form rather than a root-search argument, because the list picker has to be
@@ -14,9 +15,22 @@ export default function Command() {
   const [isSaving, setIsSaving] = useState(false);
   const [titleError, setTitleError] = useState<string | undefined>();
 
-  const { data: lists, isLoading, error } = useCachedPromise(listTaskLists, [], { initialData: [] });
+  const {
+    data: lists,
+    isLoading,
+    error,
+  } = useCachedPromise(listTaskLists, [], {
+    initialData: [],
+    // Anything that is not "you need hora" gets a toast; the two that are get
+    // the whole screen below.
+    onError: (failure) => {
+      if (failure instanceof HoraNotInstalledError || failure instanceof HoraOutdatedError) return;
+      showFailure(failure, "Could not read your task lists");
+    },
+  });
 
-  if (error) showFailure(error, "Could not read your task lists");
+  if (error instanceof HoraNotInstalledError) return <HoraRequired reason="missing" />;
+  if (error instanceof HoraOutdatedError) return <HoraRequired reason="outdated" />;
 
   async function submit(values: { title: string; listName: string; due: Date | null; notes: string }) {
     const title = values.title.trim();

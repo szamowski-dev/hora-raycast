@@ -1,16 +1,26 @@
 import { Action, ActionPanel, Color, Icon, List, Toast, closeMainWindow, showToast, Keyboard } from "@raycast/api";
 import { useCachedPromise } from "@raycast/utils";
 import { showFailure } from "./feedback";
-import { HoraEvent, joinConference, upcomingEvents } from "./hora";
+import { HoraEvent, HoraNotInstalledError, HoraOutdatedError, joinConference, upcomingEvents } from "./hora";
+import { HoraRequired } from "./hora-required";
 
 export default function Command() {
   const { data, isLoading, error, revalidate } = useCachedPromise(
     () => upcomingEvents({ limit: 25, withMeetingLinks: true }),
     [],
-    { initialData: [] },
+    {
+      initialData: [],
+      // Anything that is not "you need hora" gets a toast; the two that are
+      // get the whole screen below.
+      onError: (failure) => {
+        if (failure instanceof HoraNotInstalledError || failure instanceof HoraOutdatedError) return;
+        showFailure(failure, "Could not read your calendar");
+      },
+    },
   );
 
-  if (error) showFailure(error, "Could not read your calendar");
+  if (error instanceof HoraNotInstalledError) return <HoraRequired reason="missing" />;
+  if (error instanceof HoraOutdatedError) return <HoraRequired reason="outdated" />;
 
   async function join(event: HoraEvent) {
     const toast = await showToast({ style: Toast.Style.Animated, title: "Opening…" });

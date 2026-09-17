@@ -25,6 +25,19 @@ export class HoraNotAuthorizedError extends Error {
   }
 }
 
+/**
+ * hora is installed but has no scripting dictionary, which means it predates
+ * 1.1.5. Worth its own case: right after this extension lands, most people
+ * who install it will be on an older hora, and "the handler is not defined"
+ * tells them nothing about what to do next.
+ */
+export class HoraOutdatedError extends Error {
+  constructor() {
+    super("This version of hora Calendar cannot be scripted.");
+    this.name = "HoraOutdatedError";
+  }
+}
+
 let cachedBundleID: string | undefined;
 
 /**
@@ -103,6 +116,9 @@ function translate(error: unknown): Error {
   const raw = error instanceof Error ? error.message : String(error);
   if (raw.includes("-1743")) return new HoraNotAuthorizedError();
   if (raw.includes("-600") || raw.includes("-10814")) return new HoraNotInstalledError();
+  // errAEEventNotHandled: hora is running but does not know the command, which
+  // in practice means a build from before the dictionary existed.
+  if (raw.includes("-1717") || raw.includes("-1708")) return new HoraOutdatedError();
   const match = raw.match(/got an error:\s*(.+?)\s*\(-?\d+\)/s);
   return new Error(match ? match[1].replace(/\.$/, "") : raw);
 }

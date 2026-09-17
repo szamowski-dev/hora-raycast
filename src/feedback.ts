@@ -1,5 +1,6 @@
 import { open, showToast, Toast } from "@raycast/api";
-import { HoraNotAuthorizedError, HoraNotInstalledError } from "./hora";
+import { HORA_WEBSITE } from "./hora-required";
+import { HoraNotAuthorizedError, HoraNotInstalledError, HoraOutdatedError } from "./hora";
 
 /**
  * One place that turns a thrown error into a toast, so every command explains
@@ -8,15 +9,32 @@ import { HoraNotAuthorizedError, HoraNotInstalledError } from "./hora";
  * osascript output.
  */
 export async function showFailure(error: unknown, title = "Something went wrong") {
+  // The commands that run without a view cannot show the full pitch that
+  // `HoraRequired` does, so the toast carries the short version of it.
   if (error instanceof HoraNotInstalledError) {
     await showToast({
       style: Toast.Style.Failure,
-      title: "hora Calendar is not installed",
-      message: "Install hora to use this extension.",
+      title: "hora Calendar for Mac required",
+      message: "Native Google Calendar for Mac. On the App Store, Setapp, or horacal.app.",
+      primaryAction: {
+        title: "Get hora Calendar",
+        onAction: () => {
+          open(HORA_WEBSITE);
+        },
+      },
+    });
+    return;
+  }
+
+  if (error instanceof HoraOutdatedError) {
+    await showToast({
+      style: Toast.Style.Failure,
+      title: "Update hora Calendar",
+      message: "Raycast support arrived in hora 1.1.5. Update and this will work.",
       primaryAction: {
         title: "Open horacal.app",
         onAction: () => {
-          open("https://horacal.app");
+          open(HORA_WEBSITE);
         },
       },
     });
