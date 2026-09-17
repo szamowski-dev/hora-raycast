@@ -54,19 +54,22 @@ export class HoraOutdatedError extends Error {
 let cachedBundleID: string | undefined;
 
 /**
- * The installed channel, resolved once per command run.
+ * Every hora on this Mac, in the order worth trying.
  *
  * Matching on bundle id rather than on the application name, the way most
- * single-channel extensions do, because all three builds are called
+ * single-channel extensions do, because all the builds are called
  * "hora Calendar" — only the identifier tells them apart.
  */
-export async function horaBundleID(): Promise<string> {
-  if (cachedBundleID) return cachedBundleID;
+async function installedBundleIDs(): Promise<string[]> {
   const installed = await getApplications();
-  const match = BUNDLE_IDS.find((id) => installed.some((app) => app.bundleId === id));
-  if (!match) throw new HoraNotInstalledError();
-  cachedBundleID = match;
-  return match;
+  const found = BUNDLE_IDS.filter((id) => installed.some((app) => app.bundleId === id));
+  if (found.length === 0) throw new HoraNotInstalledError();
+  return found;
+}
+
+/** The hora this session has settled on, if it has settled on one. */
+export async function horaBundleID(): Promise<string> {
+  return cachedBundleID ?? (await installedBundleIDs())[0];
 }
 
 /** Escapes a value for use inside an AppleScript string literal. */
@@ -100,23 +103,39 @@ function dateLiteral(variable: string, date: Date): string {
  * which in practice means date variables.
  */
 async function tellHora<T>(command: string, preamble = ""): Promise<T> {
-  const bundleID = await horaBundleID();
-  const script = [preamble, `tell application id ${quote(bundleID)}`, `  ${command}`, "end tell"]
-    .filter(Boolean)
-    .join("\n");
+  // More than one hora can be installed — a Setapp copy beside a Direct one,
+  // or an old build somebody never removed. Only the ones from 1.1.5 carry a
+  // dictionary, so walk the list until one answers rather than betting the
+  // whole command on the first that happens to be there.
+  const candidates = cachedBundleID ? [cachedBundleID] : await installedBundleIDs();
+  let lastOutdated: HoraOutdatedError | undefined;
 
-  let output: string;
-  try {
-    output = await runAppleScript(script, { humanReadableOutput: true, timeout: 30_000 });
-  } catch (error) {
-    throw translate(error);
+  for (const bundleID of candidates) {
+    const script = [preamble, `tell application id ${quote(bundleID)}`, `  ${command}`, "end tell"]
+      .filter(Boolean)
+      .join("\n");
+
+    let output: string;
+    try {
+      output = await runAppleScript(script, { humanReadableOutput: true, timeout: 30_000 });
+    } catch (error) {
+      const failure = translate(error);
+      if (failure instanceof HoraOutdatedError) {
+        lastOutdated = failure;
+        continue;
+      }
+      throw failure;
+    }
+
+    cachedBundleID = bundleID;
+    try {
+      return JSON.parse(output) as T;
+    } catch {
+      throw new Error(`hora answered with something unexpected: ${output.slice(0, 200)}`);
+    }
   }
 
-  try {
-    return JSON.parse(output) as T;
-  } catch {
-    throw new Error(`hora answered with something unexpected: ${output.slice(0, 200)}`);
-  }
+  throw lastOutdated ?? new HoraNotInstalledError();
 }
 
 /**
@@ -129,9 +148,22 @@ function translate(error: unknown): Error {
   const raw = error instanceof Error ? error.message : String(error);
   if (raw.includes("-1743")) return new HoraNotAuthorizedError();
   if (raw.includes("-600") || raw.includes("-10814")) return new HoraNotInstalledError();
-  // errAEEventNotHandled: hora is running but does not know the command, which
-  // in practice means a build from before the dictionary existed.
-  if (raw.includes("-1717") || raw.includes("-1708")) return new HoraOutdatedError();
+  // A hora without a dictionary fails two different ways, and neither says so.
+  //
+  // The first is a *compile* error: with no terminology to resolve `upcoming
+  // events` against, AppleScript never reaches the app at all and complains
+  // about a plural class name — as -2740 or -2741 depending on which word it
+  // choked on. Matching the phrase rather than the codes, because the scripts
+  // here are generated from fixed templates that are known to compile against
+  // a current hora; a syntax error can only mean the terminology is missing.
+  //
+  // The second is the runtime one, -1717: the app took the event and had no
+  // handler for it.
+  //
+  // Both mean the same thing to a person — hora is older than 1.1.5.
+  if (/syntax error/i.test(raw) || raw.includes("-1717") || raw.includes("-1708")) {
+    return new HoraOutdatedError();
+  }
   const match = raw.match(/got an error:\s*(.+?)\s*\(-?\d+\)/s);
   return new Error(match ? match[1].replace(/\.$/, "") : raw);
 }
