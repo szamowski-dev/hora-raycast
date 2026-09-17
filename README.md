@@ -1,4 +1,4 @@
-# hora Calendar in Raycast
+# hora Calendar in Raycast <img src="https://horacal.app/assets/brand/hora-icon.png" width="38" align="right"> 
 
 Put an event in your calendar by describing it, add a task, or jump into your next call — without leaving Raycast, and usually without hora ever coming forward.
 
