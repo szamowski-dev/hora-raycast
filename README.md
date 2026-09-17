@@ -54,6 +54,8 @@ The sentence is parsed by hora itself, not by this extension, so you get exactly
 
 `create meeting` takes the same kind of sentence, but instead of saving it, hora comes forward with its editor already filled in from what you typed. Nothing is saved until you save it.
 
+<img src="media/hora-calendar-3.png" alt="hora's event editor, opened from Raycast with the title and guest already filled in" width="700"/>
+
 Reach for this one when there is more to the event than a time — guests to invite, a room to book, a Meet or Zoom link to attach, a description to write. The parser does the first 80%, you do the rest.
 
 ## Create Task
