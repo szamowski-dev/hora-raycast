@@ -42,7 +42,11 @@ export default function Command() {
             <ActionPanel>
               <Action title="Join Meeting" icon={Icon.Video} onAction={() => join(event)} />
               {event.conferenceLink && (
-                <Action.CopyToClipboard title="Copy Meeting Link" content={event.conferenceLink} />
+                <Action.CopyToClipboard
+                  title="Copy Meeting Link"
+                  content={event.conferenceLink}
+                  shortcut={Keyboard.Shortcut.Common.Copy}
+                />
               )}
               <Action
                 title="Refresh"
