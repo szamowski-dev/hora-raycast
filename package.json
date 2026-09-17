@@ -1,0 +1,94 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "hora-calendar",
+  "title": "hora Calendar",
+  "description": "Add events and tasks to hora Calendar and join your next meeting, without leaving Raycast.",
+  "icon": "icon.png",
+  "author": "szamski",
+  "platforms": ["macOS"],
+  "categories": ["Productivity"],
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "quick-add-event",
+      "title": "Quick Add Event",
+      "subtitle": "hora Calendar",
+      "description": "Create an event from a sentence without opening hora.",
+      "mode": "no-view",
+      "arguments": [
+        {
+          "name": "sentence",
+          "placeholder": "lunch with Kuba on Thursday at 1pm",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "add-event",
+      "title": "Add Event",
+      "subtitle": "hora Calendar",
+      "description": "Parse a sentence and open it in hora's editor to adjust before saving.",
+      "mode": "no-view",
+      "arguments": [
+        {
+          "name": "sentence",
+          "placeholder": "lunch with Kuba on Thursday at 1pm",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "add-task",
+      "title": "Add Task",
+      "subtitle": "hora Calendar",
+      "description": "Add a task to one of your Google Tasks lists.",
+      "mode": "view"
+    },
+    {
+      "name": "join-meeting",
+      "title": "Join Meeting",
+      "subtitle": "hora Calendar",
+      "description": "Find an upcoming meeting and open its link in the right account.",
+      "mode": "view"
+    }
+  ],
+  "preferences": [
+    {
+      "name": "calendarName",
+      "title": "Default Calendar",
+      "description": "Calendar that Quick Add Event writes to. Leave empty to use the primary calendar of your first connected account.",
+      "type": "textfield",
+      "required": false,
+      "default": ""
+    },
+    {
+      "name": "closeWindowOnAdd",
+      "label": "Close Raycast after adding",
+      "description": "Dismiss the Raycast window as soon as a quick add is sent.",
+      "type": "checkbox",
+      "required": false,
+      "default": true
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.104.0",
+    "@raycast/utils": "^2.2.1"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^2.0.4",
+    "@types/node": "22.13.10",
+    "@types/react": "19.0.10",
+    "eslint": "^9.22.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "build": "ray build",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint",
+    "publish": "npx @raycast/api@latest publish"
+  }
+}
