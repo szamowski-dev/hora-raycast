@@ -8,8 +8,21 @@ import { runAppleScript } from "@raycast/utils";
 // template plus a `JSON.parse`. The dictionary is the contract — if something
 // is missing from this file, look there first.
 
-/** hora ships through three channels, each with its own bundle identifier. */
-const BUNDLE_IDS = ["szamowski.Hora", "szamowski.Hora-setapp", "szamowski.Hora-direct", "szamowski.Hora.dev"];
+/**
+ * hora ships through three channels, each with its own bundle identifier.
+ *
+ * The dev and demo builds trail them so the extension can be worked on, and so
+ * Store screenshots can be taken against hora's seeded demo data instead of
+ * somebody's real calendar. Neither build is distributed, so both entries are
+ * inert for everyone else.
+ */
+const BUNDLE_IDS = [
+  "szamowski.Hora",
+  "szamowski.Hora-setapp",
+  "szamowski.Hora-direct",
+  "szamowski.Hora.dev",
+  "szamowski.Hora.demo",
+];
 
 export class HoraNotInstalledError extends Error {
   constructor() {
