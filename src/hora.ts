@@ -67,9 +67,36 @@ async function installedBundleIDs(): Promise<string[]> {
   return found;
 }
 
+/**
+ * The installed builds, with the ones already open first.
+ *
+ * Someone can have a Setapp copy beside a Direct one, or a work build beside
+ * the demo build used for screenshots. Whichever hora they are actually
+ * looking at is the one a command should reach — and preferring it also
+ * avoids launching a second copy just to answer a question.
+ *
+ * `running of application id` answers without launching anything, and the
+ * whole check is one round trip, skipped entirely when only one hora exists.
+ */
+async function orderedCandidates(): Promise<string[]> {
+  const installed = await installedBundleIDs();
+  if (installed.length < 2) return installed;
+
+  try {
+    const answer = await runAppleScript(
+      `return {${installed.map((id) => `running of application id ${quote(id)}`).join(", ")}}`,
+      { humanReadableOutput: true, timeout: 5_000 },
+    );
+    const isRunning = answer.split(",").map((value) => value.trim() === "true");
+    return [...installed.filter((_, i) => isRunning[i]), ...installed.filter((_, i) => !isRunning[i])];
+  } catch {
+    return installed;
+  }
+}
+
 /** The hora this session has settled on, if it has settled on one. */
 export async function horaBundleID(): Promise<string> {
-  return cachedBundleID ?? (await installedBundleIDs())[0];
+  return cachedBundleID ?? (await orderedCandidates())[0];
 }
 
 /** Escapes a value for use inside an AppleScript string literal. */
@@ -107,7 +134,7 @@ async function tellHora<T>(command: string, preamble = ""): Promise<T> {
   // or an old build somebody never removed. Only the ones from 1.1.5 carry a
   // dictionary, so walk the list until one answers rather than betting the
   // whole command on the first that happens to be there.
-  const candidates = cachedBundleID ? [cachedBundleID] : await installedBundleIDs();
+  const candidates = cachedBundleID ? [cachedBundleID] : await orderedCandidates();
   let lastOutdated: HoraOutdatedError | undefined;
 
   for (const bundleID of candidates) {
