@@ -2,14 +2,17 @@
 
 Put an event in your calendar by describing it, add a task, or jump into your next call — without leaving Raycast, and usually without hora ever coming forward.
 
+**This is the official hora Calendar extension, built and maintained by the team that makes the app.**
+
 - [Requires hora Calendar for Mac](#requires-hora-calendar-for-mac)
+- [Installing](#installing)
 - [Create Calendar Event](#create-calendar-event)
 - [Create Meeting](#create-meeting)
 - [Create Task](#create-task)
 - [Join Next Meeting](#join-next-meeting)
 - [Choosing a calendar](#choosing-a-calendar)
-- [Letting Raycast control hora](#letting-raycast-control-hora)
 - [Preferences](#preferences)
+- [Privacy](#privacy)
 - [How it talks to hora](#how-it-talks-to-hora)
 - [Contributing](#contributing)
 
@@ -29,11 +32,21 @@ Get it from whichever suits you, each with a free trial:
 
 The extension works with all three and finds whichever one you installed; there is nothing to configure. You need **hora 1.1.5 or newer** — earlier versions cannot be scripted, and the extension will tell you so and offer the update.
 
+## Installing
+
+1. Install the extension from the Raycast Store.
+2. Install hora Calendar from the Mac App Store, Setapp or [horacal.app](https://horacal.app), and sign in to your Google account.
+3. Run any command. macOS asks once whether Raycast may control hora — say yes.
+
+That is the whole setup. There is no API key, no token and no account to connect: the extension reaches hora on your own Mac.
+
+If you dismissed the permission prompt, turn it back on under **System Settings › Privacy & Security › Automation › Raycast**. The extension offers to open that pane for you when it notices the permission is missing.
+
 ## Create Calendar Event
 
 Type `create calendar event` and then describe it the way you would say it out loud — `lunch with Kuba on Thursday at 1pm`, `standup tomorrow 9:30`, `dentist next Friday`.
 
-<img src="metadata/hora-calendar-3.png" alt="Describing an event in the Create Calendar Event command" width="700"/>
+<img src="media/hora-calendar-3.png" alt="Describing an event in the Create Calendar Event command" width="700"/>
 
 Press Enter and it is in your calendar. hora does not open, does not take focus, does not flash a window at you — all you get is a toast confirming the title and the time it landed on.
 
@@ -49,7 +62,7 @@ Reach for this one when there is more to the event than a time — guests to inv
 
 `create task` opens a small form: the task, which of your Google Tasks lists it belongs to, when it is due, and a note.
 
-<img src="metadata/hora-calendar-1.png" alt="The Create Task form with a list, a due date and notes" width="700"/>
+<img src="media/hora-calendar-1.png" alt="The Create Task form with a list, a due date and notes" width="700"/>
 
 The list dropdown is filled from the lists hora has actually synced, and it starts on the same default list hora uses when you add a task from its sidebar. Google Tasks records the day only, never a time of day, which is why there is a date picker and no clock.
 
@@ -57,7 +70,7 @@ The list dropdown is filled from the lists hora has actually synced, and it star
 
 `join next meeting` lists what is coming up that you can actually join — anything with a Google Meet, Zoom or Teams link.
 
-<img src="metadata/hora-calendar-2.png" alt="The Join Next Meeting list showing an upcoming call" width="700"/>
+<img src="media/hora-calendar-2.png" alt="The Join Next Meeting list showing an upcoming call" width="700"/>
 
 Each row shows which account the meeting belongs to and how soon it starts: `in 20 min` while it is close, the time while it is still today, the weekday after that. Press Enter and the call opens in the right app, signed in as the right Google account — which matters if you keep work and personal accounts side by side. `⌘ ⇧ C` copies the link instead.
 
@@ -67,18 +80,22 @@ Create Calendar Event writes to the calendar set under **Default Calendar** in t
 
 To put one event somewhere else, use **Create Meeting** and pick the calendar in hora's editor before saving.
 
-## Letting Raycast control hora
-
-macOS asks for permission the first time you run a command. If you dismissed that prompt, turn it back on under **System Settings › Privacy & Security › Automation › Raycast** — the extension will offer to open that pane for you.
-
-Nothing leaves your Mac. The extension talks to hora locally over Apple events; it has no server, no account and no network calls of its own.
-
 ## Preferences
 
 | Preference | What it does |
 | --- | --- |
 | **Default Calendar** | The calendar Create Calendar Event writes to. Empty means the primary calendar of your first connected account. |
 | **Close Raycast after adding** | Dismiss the Raycast window as soon as an event is sent. On by default. |
+
+## Privacy
+
+Nothing leaves your Mac.
+
+The extension makes no network requests of its own. It has no server, no analytics and no account. Everything it does is an Apple event sent to hora, running on the same machine — the same mechanism Script Editor or Shortcuts would use.
+
+Your calendar data is read from hora's local store and used only to draw the list you are looking at. It is never stored by the extension, never cached anywhere outside Raycast's own process, and never sent anywhere.
+
+The only preference stored is the default calendar name you type in, which stays in Raycast's own preferences on your Mac.
 
 ## How it talks to hora
 

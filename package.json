@@ -2,14 +2,15 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "hora-calendar",
   "title": "hora Calendar",
-  "description": "Add events and tasks to hora Calendar and join your next meeting, without leaving Raycast.",
+  "description": "The official hora Calendar extension. Create events and tasks in plain language and join your next meeting, without leaving Raycast.",
   "icon": "icon.png",
   "author": "szamski",
   "platforms": [
     "macOS"
   ],
   "categories": [
-    "Productivity"
+    "Productivity",
+    "Applications"
   ],
   "license": "MIT",
   "commands": [
@@ -111,8 +112,8 @@
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.104.0",
-    "@raycast/utils": "^2.2.1"
+    "@raycast/api": "^2.4.1",
+    "@raycast/utils": "^2.3.1"
   },
   "devDependencies": {
     "@raycast/eslint-config": "^2.0.4",
