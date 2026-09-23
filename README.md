@@ -22,21 +22,22 @@ Put an event in your calendar by describing it, add a task, or jump into your ne
 
 This extension is a front door, not the product. It drives [hora Calendar](https://horacal.app) — a native macOS client for Google Calendar with no Electron and no web views — which holds your calendars, your Google Tasks, your meeting rooms and your invitations.
 
-Get it from whichever suits you, each with a free trial:
+**Recommended: Direct from hora.** Download the latest Raycast-compatible version from [horacal.app](https://horacal.app/download/direct/) or install it with Homebrew:
 
-| | |
-| --- | --- |
-| **Mac App Store** | [apps.apple.com](https://apps.apple.com/app/id6761409895) |
-| **Setapp** | [setapp.com](https://setapp.com/) — included in your subscription |
-| **Direct from us** | [horacal.app](https://horacal.app) |
+```bash
+brew install --cask szamowski-dev/tap/hora
+```
 
-The extension works with all three and finds whichever one you installed; there is nothing to configure. You need **hora 1.1.5 or newer** — earlier versions cannot be scripted, and the extension will tell you so and offer the update.
+**Setapp** also has a Raycast-compatible build. The **Mac App Store update is pending**, so its current version does not support this extension yet.
+
+The extension detects the supported Direct or Setapp build automatically; there is nothing to configure. You need **hora 1.1.5 or newer** — earlier versions cannot be scripted, and the extension will tell you how to update.
 
 ## Installing
 
 1. Install the extension from the Raycast Store.
-2. Install hora Calendar from the Mac App Store, Setapp or [horacal.app](https://horacal.app), and sign in to your Google account.
-3. Run any command. macOS asks once whether Raycast may control hora — say yes.
+2. Install the recommended [Direct version](https://horacal.app/download/direct/) — or use Homebrew with `brew install --cask szamowski-dev/tap/hora`. Setapp works too; the Mac App Store update is still pending.
+3. Sign in to your Google account.
+4. Run any command. macOS asks once whether Raycast may control hora — say yes.
 
 That is the whole setup. There is no API key, no token and no account to connect: the extension reaches hora on your own Mac.
 

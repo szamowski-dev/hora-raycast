@@ -1,8 +1,8 @@
 import { Action, ActionPanel, Detail, Icon } from "@raycast/api";
 
-export const HORA_WEBSITE = "https://horacal.app";
-export const HORA_APP_STORE = "https://apps.apple.com/app/id6761409895";
+export const HORA_DIRECT_DOWNLOAD = "https://horacal.app/download/direct/";
 export const HORA_SETAPP = "https://setapp.com/";
+export const HOMEBREW_INSTALL_COMMAND = "brew install --cask szamowski-dev/tap/hora";
 
 /**
  * What someone sees when the extension has nothing to talk to.
@@ -18,7 +18,7 @@ export function HoraRequired({ reason }: { reason: "missing" | "outdated" }) {
 
 Your copy of hora Calendar is older than 1.1.5 and cannot be controlled from Raycast yet.
 
-Update it from wherever you installed it — the Mac App Store, Setapp, or **Check for Updates** in hora's menu — and this command will work right away.`
+Install the latest Direct release from [horacal.app](https://horacal.app/download/direct/) or update your Setapp copy. The Mac App Store update is still pending.`
       : `# hora Calendar for Mac required
 
 **Native Google Calendar for Mac.**
@@ -27,20 +27,22 @@ Create and join meetings without opening your browser.
 
 Your calendar, your tasks, your meeting rooms and your invitations in one native app — no Electron, no web views. This extension is how you reach it from Raycast.
 
-Available on the Mac App Store, on Setapp, or directly from horacal.app. Every channel includes a free trial, so you can try it before deciding.`;
+**Recommended: Direct from hora.** Download it from [horacal.app](https://horacal.app/download/direct/) or install it with Homebrew. Setapp also has the Raycast-compatible version. The Mac App Store update is still pending.`;
 
   return (
     <Detail
       markdown={markdown}
       actions={
         <ActionPanel>
-          <Action.OpenInBrowser
-            title={reason === "outdated" ? "Open Horacal.app" : "Get Hora Calendar"}
-            icon={Icon.Download}
-            url={HORA_WEBSITE}
-          />
-          <Action.OpenInBrowser title="Get on the Mac App Store" icon={Icon.AppWindow} url={HORA_APP_STORE} />
-          <Action.OpenInBrowser title="Get on Setapp" icon={Icon.Box} url={HORA_SETAPP} />
+          <Action.OpenInBrowser title="Download Direct Version" icon={Icon.Download} url={HORA_DIRECT_DOWNLOAD} />
+          {reason === "missing" && (
+            <Action.CopyToClipboard
+              title="Copy Homebrew Install Command"
+              content={HOMEBREW_INSTALL_COMMAND}
+              icon={Icon.Terminal}
+            />
+          )}
+          <Action.OpenInBrowser title="Get Setapp Version" icon={Icon.Box} url={HORA_SETAPP} />
         </ActionPanel>
       }
     />

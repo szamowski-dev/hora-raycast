@@ -1,5 +1,5 @@
-import { open, showToast, Toast } from "@raycast/api";
-import { HORA_WEBSITE } from "./hora-required";
+import { Clipboard, open, showToast, Toast } from "@raycast/api";
+import { HORA_DIRECT_DOWNLOAD, HOMEBREW_INSTALL_COMMAND } from "./hora-required";
 import { HoraNotAuthorizedError, HoraNotInstalledError, HoraOutdatedError } from "./hora";
 
 /**
@@ -15,11 +15,11 @@ export async function showFailure(error: unknown, title = "Something went wrong"
     await showToast({
       style: Toast.Style.Failure,
       title: "hora Calendar for Mac required",
-      message: "Native Google Calendar for Mac. On the App Store, Setapp, or horacal.app.",
+      message: "Native Google Calendar for Mac. Direct is recommended; Setapp is also available.",
       primaryAction: {
-        title: "Get hora Calendar",
+        title: "Get hora Calendar Direct",
         onAction: () => {
-          open(HORA_WEBSITE);
+          open(HORA_DIRECT_DOWNLOAD);
         },
       },
     });
@@ -30,12 +30,16 @@ export async function showFailure(error: unknown, title = "Something went wrong"
     await showToast({
       style: Toast.Style.Failure,
       title: "Update hora Calendar",
-      message: "Raycast support arrived in hora 1.1.5. Update and this will work.",
+      message: "Raycast support arrived in hora 1.1.5. Update Direct or Setapp; the Mac App Store update is pending.",
       primaryAction: {
-        title: "Open horacal.app",
+        title: "Download the Latest Direct Version",
         onAction: () => {
-          open(HORA_WEBSITE);
+          open(HORA_DIRECT_DOWNLOAD);
         },
+      },
+      secondaryAction: {
+        title: "Copy Homebrew Install Command",
+        onAction: () => Clipboard.copy(HOMEBREW_INSTALL_COMMAND),
       },
     });
     return;
