@@ -1,10 +1,12 @@
-import { Action, ActionPanel, Color, Icon, List, Toast, closeMainWindow, showToast, Keyboard } from "@raycast/api";
+import { Action, ActionPanel, Color, getPreferenceValues, Icon, Keyboard, List } from "@raycast/api";
 import { useCachedPromise } from "@raycast/utils";
+import { joinEvent } from "./actions";
 import { showFailure } from "./feedback";
-import { HoraEvent, HoraNotInstalledError, HoraOutdatedError, joinConference, upcomingEvents } from "./hora";
+import { HoraEvent, HoraNotInstalledError, HoraOutdatedError, upcomingEvents } from "./hora";
 import { HoraRequired } from "./hora-required";
 
 export default function Command() {
+  const { dateLocale } = getPreferenceValues<Preferences.JoinNextMeeting>();
   const { data, isLoading, error, revalidate } = useCachedPromise(
     () => upcomingEvents({ limit: 25, withMeetingLinks: true }),
     [],
@@ -22,18 +24,6 @@ export default function Command() {
   if (error instanceof HoraNotInstalledError) return <HoraRequired reason="missing" />;
   if (error instanceof HoraOutdatedError) return <HoraRequired reason="outdated" />;
 
-  async function join(event: HoraEvent) {
-    const toast = await showToast({ style: Toast.Style.Animated, title: "Opening…" });
-    try {
-      await joinConference(event.id);
-      await closeMainWindow();
-      toast.style = Toast.Style.Success;
-      toast.title = `Joining ${event.title}`;
-    } catch (failure) {
-      await showFailure(failure, "Could not join the meeting");
-    }
-  }
-
   return (
     <List isLoading={isLoading} searchBarPlaceholder="Search your meetings">
       <List.EmptyView
@@ -47,10 +37,12 @@ export default function Command() {
           title={event.title}
           subtitle={event.accountEmail}
           icon={{ source: Icon.Dot, tintColor: event.calendarColorHex ?? Color.SecondaryText }}
-          accessories={[{ text: relativeWhen(event), tooltip: new Date(event.start).toLocaleString() }]}
+          accessories={[
+            { text: relativeWhen(event, dateLocale), tooltip: new Date(event.start).toLocaleString(dateLocale) },
+          ]}
           actions={
             <ActionPanel>
-              <Action title="Join Meeting" icon={Icon.Video} onAction={() => join(event)} />
+              <Action title="Join Meeting" icon={Icon.Video} onAction={() => joinEvent(event)} />
               {event.conferenceLink && (
                 <Action.CopyToClipboard
                   title="Copy Meeting Link"
@@ -73,7 +65,7 @@ export default function Command() {
 }
 
 /** "in 20 min", "14:30", "Thu 09:00" — whichever tells you the most at a glance. */
-function relativeWhen(event: HoraEvent): string {
+function relativeWhen(event: HoraEvent, locale: string): string {
   const start = new Date(event.start);
   const minutesAway = Math.round((start.getTime() - Date.now()) / 60_000);
 
@@ -82,6 +74,6 @@ function relativeWhen(event: HoraEvent): string {
 
   const isToday = start.toDateString() === new Date().toDateString();
   return isToday
-    ? start.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })
-    : start.toLocaleString(undefined, { weekday: "short", hour: "2-digit", minute: "2-digit" });
+    ? start.toLocaleTimeString(locale, { hour: "numeric", minute: "2-digit" })
+    : start.toLocaleString(locale, { weekday: "short", hour: "numeric", minute: "2-digit" });
 }

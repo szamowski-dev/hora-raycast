@@ -1,6 +1,6 @@
 # hora Calendar in Raycast <img src="https://horacal.app/assets/brand/hora-icon.png" width="38" align="right"> 
 
-Put an event in your calendar by describing it, add a task, or jump into your next call — without leaving Raycast, and usually without hora ever coming forward.
+Put an event in your calendar by describing it, add a task, jump into your next call, run a Focus session or share your free time — without leaving Raycast, and usually without hora ever coming forward.
 
 **This is the official hora Calendar extension, built and maintained by the team that makes the app.**
 
@@ -10,6 +10,9 @@ Put an event in your calendar by describing it, add a task, or jump into your ne
 - [Create Meeting](#create-meeting)
 - [Create Task](#create-task)
 - [Join Next Meeting](#join-next-meeting)
+- [Today's Agenda](#todays-agenda)
+- [Start Focus and Stop Focus](#start-focus-and-stop-focus)
+- [Copy My Availability](#copy-my-availability)
 - [Choosing a calendar](#choosing-a-calendar)
 - [Preferences](#preferences)
 - [Privacy](#privacy)
@@ -22,21 +25,22 @@ Put an event in your calendar by describing it, add a task, or jump into your ne
 
 This extension is a front door, not the product. It drives [hora Calendar](https://horacal.app) — a native macOS client for Google Calendar with no Electron and no web views — which holds your calendars, your Google Tasks, your meeting rooms and your invitations.
 
-Get it from whichever suits you, each with a free trial:
+**Recommended: Direct from hora.** Download the latest Raycast-compatible version from [horacal.app](https://horacal.app/download/direct/) or install it with Homebrew:
 
-| | |
-| --- | --- |
-| **Mac App Store** | [apps.apple.com](https://apps.apple.com/app/id6761409895) |
-| **Setapp** | [setapp.com](https://setapp.com/) — included in your subscription |
-| **Direct from us** | [horacal.app](https://horacal.app) |
+```bash
+brew install --cask szamowski-dev/tap/hora
+```
 
-The extension works with all three and finds whichever one you installed; there is nothing to configure. You need **hora 1.1.5 or newer** — earlier versions cannot be scripted, and the extension will tell you so and offer the update.
+**Setapp** also has a Raycast-compatible build. The **Mac App Store update is pending**, so its current version does not support this extension yet.
+
+The extension detects the supported Direct or Setapp build automatically; there is nothing to configure. You need **hora 1.1.5 or newer** — earlier versions cannot be scripted, and the extension will tell you how to update. The Focus commands and Copy My Availability need **hora Calendar 3.0.2 or later**; on an older hora they stop with an "Update hora Calendar" message.
 
 ## Installing
 
 1. Install the extension from the Raycast Store.
-2. Install hora Calendar from the Mac App Store, Setapp or [horacal.app](https://horacal.app), and sign in to your Google account.
-3. Run any command. macOS asks once whether Raycast may control hora — say yes.
+2. Install the recommended [Direct version](https://horacal.app/download/direct/) — or use Homebrew with `brew install --cask szamowski-dev/tap/hora`. Setapp works too; the Mac App Store update is still pending.
+3. Sign in to your Google account.
+4. Run any command. macOS asks once whether Raycast may control hora — say yes.
 
 That is the whole setup. There is no API key, no token and no account to connect: the extension reaches hora on your own Mac.
 
@@ -46,6 +50,8 @@ If you dismissed the permission prompt, turn it back on under **System Settings 
 
 Type `create calendar event` and then describe it the way you would say it out loud — `lunch with Kuba on Thursday at 1pm`, `standup tomorrow 9:30`, `dentist next Friday`.
 
+<img src="media/hora-calendar-2.png" alt="Create Calendar Event in Raycast with the sentence lunch with Ania" width="700"/>
+
 Press Enter and it is in your calendar. hora does not open, does not take focus, does not flash a window at you — all you get is a toast confirming the title and the time it landed on.
 
 The sentence is parsed by hora itself, not by this extension, so you get exactly the result you would get by typing the same thing into the app.
@@ -54,7 +60,7 @@ The sentence is parsed by hora itself, not by this extension, so you get exactly
 
 `create meeting` takes the same kind of sentence, but instead of saving it, hora comes forward with its editor already filled in from what you typed. Nothing is saved until you save it.
 
-<img src="media/hora-calendar-3.png" alt="hora's event editor, opened from Raycast with the title and guest already filled in" width="700"/>
+<img src="media/hora-calendar-6.png" alt="hora's event editor, opened from Raycast with the title and guest already filled in" width="700"/>
 
 Reach for this one when there is more to the event than a time — guests to invite, a room to book, a Meet or Zoom link to attach, a description to write. The parser does the first 80%, you do the rest.
 
@@ -62,7 +68,7 @@ Reach for this one when there is more to the event than a time — guests to inv
 
 `create task` opens a small form: the task, which of your Google Tasks lists it belongs to, when it is due, and a note.
 
-<img src="media/hora-calendar-2.png" alt="The Create Task form with a list, a due date and notes" width="700"/>
+<img src="media/hora-calendar-3.png" alt="The Create Task form with a list, a due date and notes" width="700"/>
 
 The list dropdown is filled from the lists hora has actually synced, and it starts on the same default list hora uses when you add a task from its sidebar. Google Tasks records the day only, never a time of day, which is why there is a date picker and no clock.
 
@@ -70,9 +76,31 @@ The list dropdown is filled from the lists hora has actually synced, and it star
 
 `join next meeting` lists what is coming up that you can actually join — anything with a Google Meet, Zoom or Teams link.
 
-<img src="media/hora-calendar-1.png" alt="The Join Next Meeting list showing upcoming calls across two accounts" width="700"/>
+<img src="media/hora-calendar-5.png" alt="The Join Next Meeting list showing upcoming calls, the first one starting in 2 minutes" width="700"/>
 
 Each row shows which account the meeting belongs to and how soon it starts: `in 20 min` while it is close, the time while it is still today, the weekday after that. Press Enter and the call opens in the right app, signed in as the right Google account — which matters if you keep work and personal accounts side by side. `⌘ ⇧ C` copies the link instead.
+
+## Today's Agenda
+
+`today's agenda` lists what is left today, with a **Tomorrow** section below it. Each row shows the calendar colour, the account and the time range.
+
+<img src="media/hora-calendar-8.png" alt="Today's Agenda with the next meeting selected and its actions open" width="700"/>
+
+Press Enter to join when the event has a call link. Other actions: **RSVP** (Accept, Maybe, Decline), **Copy Meeting Link**, and **Delete Event** — which asks for confirmation first and never notifies guests.
+
+## Start Focus and Stop Focus
+
+`start focus` starts a Focus session in hora and confirms with `Focus until 14:30`. Type a number of minutes after the command to override hora's default length; if a session is already running or paused, nothing changes and you are told so. `stop focus` ends it.
+
+The extension only controls hora's Focus. To mirror a session into Raycast Focus as well, turn that on in hora under **Settings › Focus** — hora does it itself, so there is nothing to set up here.
+
+## Copy My Availability
+
+`copy my availability` asks hora for your free slots and copies them as text, ready to paste into a message.
+
+<img src="media/hora-calendar-4.png" alt="Copy My Availability in Raycast with 30 min and 3 days picked" width="700"/>
+
+Pick a duration (15, 30 or 60 minutes; 30 by default) and how many days ahead to look (3, 5 or 7; 5 by default). You get `Copied 6 free slots`, or `No free time found`.
 
 ## Choosing a calendar
 
@@ -86,6 +114,7 @@ To put one event somewhere else, use **Create Meeting** and pick the calendar in
 | --- | --- |
 | **Default Calendar** | The calendar Create Calendar Event writes to. Empty means the primary calendar of your first connected account. |
 | **Close Raycast after adding** | Dismiss the Raycast window as soon as an event is sent. On by default. |
+| **Date and Time Locale** | Format event dates and times in English (United States) or Polish (Poland). English (United States) by default. |
 
 ## Privacy
 
@@ -95,7 +124,7 @@ The extension makes no network requests of its own. It has no server, no analyti
 
 Your calendar data is read from hora's local store and used only to draw the list you are looking at. It is never stored by the extension, never cached anywhere outside Raycast's own process, and never sent anywhere.
 
-The only preference stored is the default calendar name you type in, which stays in Raycast's own preferences on your Mac.
+Your default calendar name, close-after-add setting, and date and time locale stay in Raycast's own preferences on your Mac.
 
 ## How it talks to hora
 
@@ -106,10 +135,12 @@ tell application id "szamowski.Hora"
     parse sentence "lunch with Kuba on Thursday at 1pm" with add immediately
     add task "send the invoice"
     upcoming events limited to 10 with meeting links
+    start focus for minutes 25
+    find free time lasting 30 days ahead 5 from hour 9 to hour 17
 end tell
 ```
 
-Every command answers with JSON. Open the full dictionary in Script Editor with **File › Open Dictionary…** and pick hora Calendar — there is more in there than this extension uses, including RSVPs and deleting events.
+Every command answers with JSON. Open the full dictionary in Script Editor with **File › Open Dictionary…** and pick hora Calendar — there is more in there than this extension uses.
 
 ## Contributing
 
