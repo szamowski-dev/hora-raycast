@@ -68,7 +68,7 @@ Reach for this one when there is more to the event than a time — guests to inv
 
 `create task` opens a small form: the task, which of your Google Tasks lists it belongs to, when it is due, and a note.
 
-<img src="media/hora-calendar-3.png" alt="The Create Task form with a list, a due date and notes" width="700"/>
+<img src="media/hora-calendar-5.png" alt="The Create Task form with a list, a due date and notes" width="700"/>
 
 The list dropdown is filled from the lists hora has actually synced, and it starts on the same default list hora uses when you add a task from its sidebar. Google Tasks records the day only, never a time of day, which is why there is a date picker and no clock.
 
@@ -76,7 +76,7 @@ The list dropdown is filled from the lists hora has actually synced, and it star
 
 `join next meeting` lists what is coming up that you can actually join — anything with a Google Meet, Zoom or Teams link.
 
-<img src="media/hora-calendar-5.png" alt="The Join Next Meeting list showing upcoming calls, the first one starting in 2 minutes" width="700"/>
+<img src="media/hora-calendar-3.png" alt="The Join Next Meeting list showing upcoming calls, the first one starting in 2 minutes" width="700"/>
 
 Each row shows which account the meeting belongs to and how soon it starts: `in 20 min` while it is close, the time while it is still today, the weekday after that. Press Enter and the call opens in the right app, signed in as the right Google account — which matters if you keep work and personal accounts side by side. `⌘ ⇧ C` copies the link instead.
 
