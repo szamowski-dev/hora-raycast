@@ -7,7 +7,7 @@
 - Today's Agenda — see what is left today and tomorrow, then join, RSVP, copy a link or delete an event
 - Focus and Copy My Availability need hora Calendar 3.0.2 or later
 
-## [Initial Version] - {PR_MERGE_DATE}
+## [Initial Version] - 2026-10-07
 
 - Create Calendar Event — describe an event and save it without opening hora
 - Create Meeting — parse a sentence, then refine it in hora before saving
