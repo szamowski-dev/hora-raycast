@@ -45,8 +45,8 @@ export class HoraNotAuthorizedError extends Error {
  * tells them nothing about what to do next.
  */
 export class HoraOutdatedError extends Error {
-  constructor() {
-    super("This version of hora Calendar cannot be scripted.");
+  constructor(message = "This version of hora Calendar cannot be scripted.") {
+    super(message);
     this.name = "HoraOutdatedError";
   }
 }
@@ -265,15 +265,42 @@ export async function addTask(input: {
   title: string;
   due?: Date;
   listName?: string;
+  listID?: string;
+  accountEmail?: string;
   notes?: string;
 }): Promise<CreatedTask> {
-  const parts = [`add task ${quote(input.title)}`];
   let preamble = "";
+  const parts = [`add task ${quote(input.title)}`];
   if (input.due) {
     preamble = dateLiteral("dueDate", input.due);
     parts.push("due on dueDate");
   }
-  if (input.listName) parts.push(`in list ${quote(input.listName)}`);
+  if (input.listID && input.accountEmail) {
+    const exactParts = [...parts, `with list ID ${quote(input.listID)}`, `for account ${quote(input.accountEmail)}`];
+    if (input.notes) exactParts.push(`notes ${quote(input.notes)}`);
+    try {
+      return await tellHora<CreatedTask>(exactParts.join(" "), preamble);
+    } catch (error) {
+      if (!(error instanceof HoraOutdatedError) || !input.listName) throw error;
+      const sameName = (await listTaskLists()).filter(
+        (list) => list.name.localeCompare(input.listName!, undefined, { sensitivity: "accent" }) === 0,
+      );
+      if (
+        sameName.length !== 1 ||
+        sameName[0].id !== input.listID ||
+        sameName[0].accountEmail.toLowerCase() !== input.accountEmail.toLowerCase()
+      ) {
+        throw new HoraOutdatedError(
+          "This hora build cannot safely select that task list. Update to a build with account-specific task lists.",
+        );
+      }
+      parts.push(`in list ${quote(input.listName)}`);
+    }
+  } else if (input.listID || input.accountEmail) {
+    throw new Error("Pass a task list ID together with its account email.");
+  } else if (input.listName) {
+    parts.push(`in list ${quote(input.listName)}`);
+  }
   if (input.notes) parts.push(`notes ${quote(input.notes)}`);
   return tellHora<CreatedTask>(parts.join(" "), preamble);
 }

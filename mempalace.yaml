@@ -1,0 +1,25 @@
+wing: hora_raycast
+rooms:
+- name: design
+  description: Files from assets/
+  keywords:
+  - design
+  - assets
+- name: metadata
+  description: Files from metadata/
+  keywords:
+  - metadata
+  - metadata
+- name: media
+  description: Files from media/
+  keywords:
+  - media
+  - media
+- name: src
+  description: Files from src/
+  keywords:
+  - src
+  - src
+- name: general
+  description: Files that don't fit other rooms
+  keywords: []
