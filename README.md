@@ -28,7 +28,7 @@ This extension is a front door, not the product. It drives [hora Calendar](https
 **Recommended: Direct from hora.** Download the latest Raycast-compatible version from [horacal.app](https://horacal.app/download/direct/) or install it with Homebrew:
 
 ```bash
-brew install --cask szamowski-dev/tap/hora
+brew install --cask hora-calendar
 ```
 
 **Setapp** also has a Raycast-compatible build. The **Mac App Store update is pending**, so its current version does not support this extension yet.
@@ -38,7 +38,7 @@ The extension detects the supported Direct or Setapp build automatically; there 
 ## Installing
 
 1. Install the extension from the Raycast Store.
-2. Install the recommended [Direct version](https://horacal.app/download/direct/) — or use Homebrew with `brew install --cask szamowski-dev/tap/hora`. Setapp works too; the Mac App Store update is still pending.
+2. Install the recommended [Direct version](https://horacal.app/download/direct/) — or use Homebrew with `brew install --cask hora-calendar`. Setapp works too; the Mac App Store update is still pending.
 3. Sign in to your Google account.
 4. Run any command. macOS asks once whether Raycast may control hora — say yes.
 

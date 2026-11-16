@@ -2,7 +2,7 @@ import { Action, ActionPanel, Detail, Icon } from "@raycast/api";
 
 export const HORA_DIRECT_DOWNLOAD = "https://horacal.app/download/direct/";
 export const HORA_SETAPP = "https://setapp.com/";
-export const HOMEBREW_INSTALL_COMMAND = "brew install --cask szamowski-dev/tap/hora";
+export const HOMEBREW_INSTALL_COMMAND = "brew install --cask hora-calendar";
 
 /**
  * What someone sees when the extension has nothing to talk to.
